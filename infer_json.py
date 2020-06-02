@@ -12,6 +12,8 @@ from model import Model
 from roi.pooler import Pooler
 from config.eval_config import EvalConfig as Config
 
+import json
+from collections import OrderedDict
 
 def _infer(path_to_input_image: str, path_to_output_image: str, path_to_checkpoint: str, dataset_name: str, backbone_name: str, prob_thresh: float):
     dataset_class = DatasetBase.from_name(dataset_name)
@@ -34,23 +36,10 @@ def _infer(path_to_input_image: str, path_to_output_image: str, path_to_checkpoi
         detection_classes = detection_classes[kept_indices]
         detection_probs = detection_probs[kept_indices]
 
-        draw = ImageDraw.Draw(image)
-
         for bbox, cls, prob in zip(detection_bboxes.tolist(), detection_classes.tolist(), detection_probs.tolist()):
-            color = random.choice(['red', 'green', 'blue', 'yellow', 'purple', 'white'])
             bbox = BBox(left=bbox[0], top=bbox[1], right=bbox[2], bottom=bbox[3])
             category = dataset_class.LABEL_TO_CATEGORY_DICT[cls]
 
-            draw.rectangle(((bbox.left, bbox.top), (bbox.right, bbox.bottom)), outline=color)
-            draw.rectangle(((bbox.left+1, bbox.top+1), (bbox.right+1, bbox.bottom+1)), outline=color)
-            draw.rectangle(((bbox.left+2, bbox.top+2), (bbox.right+2, bbox.bottom+2)), outline=color)
-            draw.rectangle(((bbox.left+3, bbox.top+3), (bbox.right+3, bbox.bottom+3)), outline=color)
-            draw.rectangle(((bbox.left+4, bbox.top+4), (bbox.right+4, bbox.bottom+4)), outline=color)
-            draw.rectangle(((bbox.left+5, bbox.top+5), (bbox.right+5, bbox.bottom+5)), outline=color)
-
-            draw.text((bbox.left, bbox.top), text=f'{category:s} {prob:.3f}', fill=color)
-
-        image.save(path_to_output_image)
         print(f'Output image is saved to {path_to_output_image}')
 
 

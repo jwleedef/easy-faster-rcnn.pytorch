@@ -28,7 +28,8 @@ class ResNet101(backbone.base.Base):
         hidden = children[-3]
         num_hidden_out = 2048
 
-        for parameters in [feature.parameters() for i, feature in enumerate(features) if i <= 4]:
+        # for parameters in [feature.parameters() for i, feature in enumerate(features) if i <= 4]:
+        for parameters in [feature.parameters() for i, feature in enumerate(features)]:
             for parameter in parameters:
                 parameter.requires_grad = False
 
