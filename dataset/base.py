@@ -39,6 +39,9 @@ class Base(torch.utils.data.dataset.Dataset):
         elif name == 'coco2017-animal':
             from dataset.coco2017_animal import COCO2017Animal
             return COCO2017Animal
+        elif name == 'obstacle':
+            from dataset.obstacle import Obstacle
+            return Obstacle
         else:
             raise ValueError
 
