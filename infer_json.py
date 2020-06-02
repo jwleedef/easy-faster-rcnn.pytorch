@@ -36,11 +36,28 @@ def _infer(path_to_input_image: str, path_to_output_image: str, path_to_checkpoi
         detection_classes = detection_classes[kept_indices]
         detection_probs = detection_probs[kept_indices]
 
+        jsonData = OrderedDict()
+        resultData = OrderedDict()
+        detectionResultDataList = []
+
+        jsonData["image_path"] = path_to_input_image
+        jsonData["modules"] = "Faster_R-CNN_ResNet101"
+
         for bbox, cls, prob in zip(detection_bboxes.tolist(), detection_classes.tolist(), detection_probs.tolist()):
             bbox = BBox(left=bbox[0], top=bbox[1], right=bbox[2], bottom=bbox[3])
             category = dataset_class.LABEL_TO_CATEGORY_DICT[cls]
 
-        print(f'Output image is saved to {path_to_output_image}')
+            detectionResultData = OrderedDict()
+            detectionResultData["label"] = [{'description':category, 'score':prob }]
+            detectionResultData["position"] = {'x':bbox.left, 'y':bbox.top, 'w':(bbox.right-bbox.left), 'h':(bbox.bottom-bbox.top)}
+            detectionResultDataList.append(detectionResultData)
+
+        resultData["module_name"] = "Faster_R-CNN_ResNet101"
+        resultData["detection_result"] = detectionResultDataList
+        jsonData["results"] = [resultData]
+
+        with open('{}'.format(path_to_output_image), 'w', encoding="utf-8") as make_file:
+            json.dump(jsonData, make_file, ensure_ascii=False, indent="\t")
 
 
 if __name__ == '__main__':
