@@ -85,6 +85,7 @@ class Obstacle(Base):
                     )
                 ) for tag_object in root.iterfind('object')]
             )
+            
             annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'cat', 'dog', 'motorcycle',
                                                                                     'movable_signage', 'scooter', 'stroller', 'truck',
                                                                                     'wheelchair', 'bollard', 'chair', 'potted_plant',
