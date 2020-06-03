@@ -81,12 +81,8 @@ class Obstacle(Base):
                 ) for tag_object in root.iterfind('object')]
             )
 
-            # annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'cat', 'dog', 'motorcycle',
-            #                                                                         'movable_signage', 'scooter', 'stroller', 'truck',
-            #                                                                         'wheelchair', 'bollard', 'chair', 'potted_plant',
-            #                                                                         'table', 'traffic_sign',
-            #                                                                         'traffic_light', 'tree_trunk', 'barricade', 'pole',
-            #                                                                         'bench', 'fire_hydrant'] and not obj.difficult]
+            annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'motorcycle', 'movable_signage', 'truck',
+                                                                                    'bollard', 'chair', 'potted_plant', 'table', 'tree_trunk', 'pole', 'bench', 'fire_hydrant'] and not obj.difficult]
 
             if len(annotation.objects) > 0:
                 self._image_id_to_annotation_dict[image_id] = annotation
