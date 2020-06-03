@@ -29,7 +29,7 @@ class ResNet101(backbone.base.Base):
         num_hidden_out = 2048
 
         # for parameters in [feature.parameters() for i, feature in enumerate(features) if i <= 4]:
-        for parameters in [feature.parameters() for i, feature in enumerate(features)]:
+        for parameters in [feature.parameters() for i, feature in enumerate(features)]: # freezing
             for parameter in parameters:
                 parameter.requires_grad = False
 

@@ -33,14 +33,9 @@ class Obstacle(Base):
             self.objects = objects
 
     CATEGORY_TO_LABEL_DICT = {
-        'background': 0,
-        'person': 1, 'bicycle': 2, 'bus': 3, 'car': 4,
-        'carrier': 5, 'cat': 6, 'dog': 7, 'motorcycle': 8,
-        'movable_signage': 9, 'scooter': 10, 'stroller': 11, 'truck': 12,
-        'wheelchair': 13, 'bollard': 14, 'chair': 15, 'potted_plant': 16,
-        'table': 17, 'traffic_sign': 18,
-        'traffic_light': 19, 'tree_trunk': 20, 'barricade': 21, 'pole': 22,
-        'bench': 23, 'fire_hydrant': 24
+        'background': 0, 'person': 1,
+        'bicycle': 2, 'bus': 3, 'car': 4, 'carrier': 5, 'motorcycle': 6, 'movable_signage': 7, 'truck': 8,
+        'bollard': 9, 'chair': 10, 'potted_plant': 11, 'table': 12, 'tree_trunk': 13, 'pole': 14, 'bench': 15, 'fire_hydrant': 16
     }
 
     LABEL_TO_CATEGORY_DICT = {v: k for k, v in CATEGORY_TO_LABEL_DICT.items()}
@@ -48,7 +43,7 @@ class Obstacle(Base):
     def __init__(self, path_to_data_dir: str, mode: Base.Mode, image_min_side: float, image_max_side: float):
         super().__init__(path_to_data_dir, mode, image_min_side, image_max_side)
 
-        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'obstacleData')
+        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle_split', 'Data')
         path_to_imagesets_main_dir = os.path.join(path_to_voc2007_dir, 'ImageSets', 'Main')
         path_to_annotations_dir = os.path.join(path_to_voc2007_dir, 'Annotations')
         self._path_to_jpeg_images_dir = os.path.join(path_to_voc2007_dir, 'JPEGImages')
@@ -85,13 +80,13 @@ class Obstacle(Base):
                     )
                 ) for tag_object in root.iterfind('object')]
             )
-            
-            annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'cat', 'dog', 'motorcycle',
-                                                                                    'movable_signage', 'scooter', 'stroller', 'truck',
-                                                                                    'wheelchair', 'bollard', 'chair', 'potted_plant',
-                                                                                    'table', 'traffic_sign',
-                                                                                    'traffic_light', 'tree_trunk', 'barricade', 'pole',
-                                                                                    'bench', 'fire_hydrant'] and not obj.difficult]
+
+            # annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'cat', 'dog', 'motorcycle',
+            #                                                                         'movable_signage', 'scooter', 'stroller', 'truck',
+            #                                                                         'wheelchair', 'bollard', 'chair', 'potted_plant',
+            #                                                                         'table', 'traffic_sign',
+            #                                                                         'traffic_light', 'tree_trunk', 'barricade', 'pole',
+            #                                                                         'bench', 'fire_hydrant'] and not obj.difficult]
 
             if len(annotation.objects) > 0:
                 self._image_id_to_annotation_dict[image_id] = annotation
@@ -132,7 +127,7 @@ class Obstacle(Base):
     def evaluate(self, path_to_results_dir: str, image_ids: List[str], bboxes: List[List[float]], classes: List[int], probs: List[float]) -> Tuple[float, str]:
         self._write_results(path_to_results_dir, image_ids, bboxes, classes, probs)
 
-        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'obstacleData')
+        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle_split', 'Data')
         path_to_main_dir = os.path.join(path_to_voc2007_dir, 'ImageSets', 'Main')
         path_to_annotations_dir = os.path.join(path_to_voc2007_dir, 'Annotations')
 
@@ -180,4 +175,4 @@ class Obstacle(Base):
 
     @staticmethod
     def num_classes() -> int:
-        return 25
+        return 17

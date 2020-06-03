@@ -75,7 +75,7 @@ if __name__ == '__main__':
         parser.add_argument('--rpn_pre_nms_top_n', type=int, help='default: {:d}'.format(Config.RPN_PRE_NMS_TOP_N))
         parser.add_argument('--rpn_post_nms_top_n', type=int, help='default: {:d}'.format(Config.RPN_POST_NMS_TOP_N))
         parser.add_argument('input', type=str, help='path to input image')
-        parser.add_argument('output', type=str, help='path to output result image')
+        parser.add_argument('output', type=str, help='path to output result json')
         args = parser.parse_args()
 
         path_to_input_image = args.input
