@@ -64,7 +64,7 @@ class COCO2017(Base):
     def __init__(self, path_to_data_dir: str, mode: Base.Mode, image_min_side: float, image_max_side: float):
         super().__init__(path_to_data_dir, mode, image_min_side, image_max_side)
 
-        path_to_coco_dir = os.path.join(self._path_to_data_dir, 'COCO')
+        path_to_coco_dir = os.path.join(self._path_to_data_dir, 'coco')
         path_to_annotations_dir = os.path.join(path_to_coco_dir, 'annotations')
         path_to_caches_dir = os.path.join('caches', 'coco2017', f'{self._mode.value}')
         path_to_image_ids_pickle = os.path.join(path_to_caches_dir, 'image-ids.pkl')
@@ -72,10 +72,10 @@ class COCO2017(Base):
         path_to_image_ratios_pickle = os.path.join(path_to_caches_dir, 'image-ratios.pkl')
 
         if self._mode == COCO2017.Mode.TRAIN:
-            path_to_jpeg_images_dir = os.path.join(path_to_coco_dir, 'train2017')
+            path_to_jpeg_images_dir = os.path.join(path_to_coco_dir, 'images/train2017')
             path_to_annotation = os.path.join(path_to_annotations_dir, 'instances_train2017.json')
         elif self._mode == COCO2017.Mode.EVAL:
-            path_to_jpeg_images_dir = os.path.join(path_to_coco_dir, 'val2017')
+            path_to_jpeg_images_dir = os.path.join(path_to_coco_dir, 'images/val2017')
             path_to_annotation = os.path.join(path_to_annotations_dir, 'instances_val2017.json')
         else:
             raise ValueError('invalid mode')
@@ -161,7 +161,7 @@ class COCO2017(Base):
         self._write_results(path_to_results_dir, image_ids, bboxes, classes, probs)
 
         annType = 'bbox'
-        path_to_coco_dir = os.path.join(self._path_to_data_dir, 'COCO')
+        path_to_coco_dir = os.path.join(self._path_to_data_dir, 'coco')
         path_to_annotations_dir = os.path.join(path_to_coco_dir, 'annotations')
         path_to_annotation = os.path.join(path_to_annotations_dir, 'instances_val2017.json')
 
