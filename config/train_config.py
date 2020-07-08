@@ -12,7 +12,7 @@ class TrainConfig(Config):
     ANCHOR_SMOOTH_L1_LOSS_BETA: float = 1.0
     PROPOSAL_SMOOTH_L1_LOSS_BETA: float = 1.0
 
-    BATCH_SIZE: int = 1
+    BATCH_SIZE: int = 4
     LEARNING_RATE: float = 0.001
     MOMENTUM: float = 0.9
     WEIGHT_DECAY: float = 0.0005
@@ -21,9 +21,9 @@ class TrainConfig(Config):
     WARM_UP_FACTOR: float = 0.3333
     WARM_UP_NUM_ITERS: int = 500
 
-    NUM_STEPS_TO_DISPLAY: int = 20
-    NUM_STEPS_TO_SNAPSHOT: int = 10000
-    NUM_STEPS_TO_FINISH: int = 90000
+    NUM_STEPS_TO_DISPLAY: int = 2500
+    NUM_STEPS_TO_SNAPSHOT: int = 30000
+    NUM_STEPS_TO_FINISH: int = 150000
 
     @classmethod
     def setup(cls, image_min_side: float = None, image_max_side: float = None,

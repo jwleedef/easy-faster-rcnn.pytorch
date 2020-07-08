@@ -7,15 +7,15 @@ from roi.pooler import Pooler
 class Config(object):
 
     # AIHub Dataset
-    #IMAGE_MIN_SIDE: float = 1080.0
-    #IMAGE_MAX_SIDE: float = 1920.0
+    IMAGE_MIN_SIDE: float = 1080.0
+    IMAGE_MAX_SIDE: float = 1920.0
     
     # Original Config
-    IMAGE_MIN_SIDE: float = 600.0
-    IMAGE_MAX_SIDE: float = 1000.0
+    # IMAGE_MIN_SIDE: float = 600.0
+    # IMAGE_MAX_SIDE: float = 1000.0
 
     ANCHOR_RATIOS: List[Tuple[int, int]] = [(1, 2), (1, 1), (2, 1)]
-    ANCHOR_SIZES: List[int] = [128, 256, 512]
+    ANCHOR_SIZES: List[int] = [64, 128, 256, 512]
     POOLER_MODE: Pooler.Mode = Pooler.Mode.ALIGN
 
     @classmethod

@@ -13,7 +13,7 @@ from dataset.base import Base
 from voc_eval import voc_eval
 
 
-class Obstacle(Base):
+class ObstacleV2(Base):
 
     class Annotation(object):
         class Object(object):
@@ -35,7 +35,7 @@ class Obstacle(Base):
     CATEGORY_TO_LABEL_DICT = {
         'background': 0, 'person': 1,
         'bicycle': 2, 'bus': 3, 'car': 4, 'carrier': 5, 'motorcycle': 6, 'movable_signage': 7, 'truck': 8,
-        'bollard': 9, 'chair': 10, 'potted_plant': 11, 'table': 12, 'tree_trunk': 13, 'pole': 14, 'bench': 15, 'fire_hydrant': 16
+        'bollard': 9, 'chair': 10, 'potted_plant': 11, 'table': 12, 'tree_trunk': 13, 'pole': 14, 'fire_hydrant': 15
     }
 
     LABEL_TO_CATEGORY_DICT = {v: k for k, v in CATEGORY_TO_LABEL_DICT.items()}
@@ -43,15 +43,14 @@ class Obstacle(Base):
     def __init__(self, path_to_data_dir: str, mode: Base.Mode, image_min_side: float, image_max_side: float):
         super().__init__(path_to_data_dir, mode, image_min_side, image_max_side)
 
-        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle_split', 'Data')
-        # path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'Data')
+        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'Data')
         path_to_imagesets_main_dir = os.path.join(path_to_voc2007_dir, 'ImageSets', 'Main')
         path_to_annotations_dir = os.path.join(path_to_voc2007_dir, 'Annotations')
         self._path_to_jpeg_images_dir = os.path.join(path_to_voc2007_dir, 'JPEGImages')
 
-        if self._mode == Obstacle.Mode.TRAIN:
+        if self._mode == ObstacleV2.Mode.TRAIN:
             path_to_image_ids_txt = os.path.join(path_to_imagesets_main_dir, 'trainval.txt')
-        elif self._mode == Obstacle.Mode.EVAL:
+        elif self._mode == ObstacleV2.Mode.EVAL:
             path_to_image_ids_txt = os.path.join(path_to_imagesets_main_dir, 'test.txt')
         else:
             raise ValueError('invalid mode')
@@ -68,9 +67,9 @@ class Obstacle(Base):
             tree = ET.ElementTree(file=path_to_annotation_xml)
             root = tree.getroot()
 
-            annotation = Obstacle.Annotation(
+            annotation = ObstacleV2.Annotation(
                 filename=root.find('filename').text,
-                objects=[Obstacle.Annotation.Object(
+                objects=[ObstacleV2.Annotation.Object(
                     name=next(tag_object.iterfind('name')).text,
                     difficult=next(tag_object.iterfind('difficult')).text == '1',
                     bbox=BBox(  # convert to 0-based pixel index
@@ -83,11 +82,10 @@ class Obstacle(Base):
             )
 
             annotation.objects = [obj for obj in annotation.objects if obj.name in ['person', 'bicycle', 'bus', 'car','carrier', 'motorcycle', 'movable_signage', 'truck',
-                                                                                    'bollard', 'chair', 'potted_plant', 'table', 'tree_trunk', 'pole', 'bench', 'fire_hydrant'] and not obj.difficult]
+                                                                                    'bollard', 'chair', 'potted_plant', 'table', 'tree_trunk', 'pole', 'fire_hydrant'] and not obj.difficult]
 
             if len(annotation.objects) > 0:
                 self._image_id_to_annotation_dict[image_id] = annotation
-                # print(image_id)
                 width = int(root.find('size/width').text)
                 height = int(root.find('size/height').text)
                 ratio = float(width / height)
@@ -103,7 +101,7 @@ class Obstacle(Base):
         annotation = self._image_id_to_annotation_dict[image_id]
 
         bboxes = [obj.bbox.tolist() for obj in annotation.objects]
-        labels = [Obstacle.CATEGORY_TO_LABEL_DICT[obj.name] for obj in annotation.objects]
+        labels = [ObstacleV2.CATEGORY_TO_LABEL_DICT[obj.name] for obj in annotation.objects]
 
         bboxes = torch.tensor(bboxes, dtype=torch.float)
         labels = torch.tensor(labels, dtype=torch.long)
@@ -111,11 +109,11 @@ class Obstacle(Base):
         image = Image.open(os.path.join(self._path_to_jpeg_images_dir, annotation.filename))
 
         # random flip on only training mode
-        if self._mode == Obstacle.Mode.TRAIN and random.random() > 0.5:
+        if self._mode == ObstacleV2.Mode.TRAIN and random.random() > 0.5:
             image = ImageOps.mirror(image)
             bboxes[:, [0, 2]] = image.width - bboxes[:, [2, 0]]  # index 0 and 2 represent `left` and `right` respectively
 
-        image, scale = Obstacle.preprocess(image, self._image_min_side, self._image_max_side)
+        image, scale = ObstacleV2.preprocess(image, self._image_min_side, self._image_max_side)
         scale = torch.tensor(scale, dtype=torch.float)
         bboxes *= scale
 
@@ -124,17 +122,15 @@ class Obstacle(Base):
     def evaluate(self, path_to_results_dir: str, image_ids: List[str], bboxes: List[List[float]], classes: List[int], probs: List[float]) -> Tuple[float, str]:
         self._write_results(path_to_results_dir, image_ids, bboxes, classes, probs)
 
-        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle_split', 'Data')
-        # path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'Data')
+        path_to_voc2007_dir = os.path.join(self._path_to_data_dir, 'obstacle', 'Data')
         path_to_main_dir = os.path.join(path_to_voc2007_dir, 'ImageSets', 'Main')
         path_to_annotations_dir = os.path.join(path_to_voc2007_dir, 'Annotations')
 
         class_to_ap_dict = {}
-        for c in range(1, Obstacle.num_classes()):
-            category = Obstacle.LABEL_TO_CATEGORY_DICT[c]
+        for c in range(1, ObstacleV2.num_classes()):
+            category = ObstacleV2.LABEL_TO_CATEGORY_DICT[c]
             try:
-                path_to_cache_dir = os.path.join('caches', 'obstacleData')
-                # path_to_cache_dir = os.path.join('caches', 'obstacleAllData')
+                path_to_cache_dir = os.path.join('caches', 'obstacleAllData')
                 os.makedirs(path_to_cache_dir, exist_ok=True)
                 _, _, ap = voc_eval(detpath=os.path.join(path_to_results_dir, 'comp3_det_test_{:s}.txt'.format(category)),
                                     annopath=os.path.join(path_to_annotations_dir, '{:s}.xml'),
@@ -151,15 +147,15 @@ class Obstacle(Base):
         mean_ap = np.mean([v for k, v in class_to_ap_dict.items()]).item()
 
         detail = ''
-        for c in range(1, Obstacle.num_classes()):
-            detail += '{:d}: {:s} AP = {:.4f}\n'.format(c, Obstacle.LABEL_TO_CATEGORY_DICT[c], class_to_ap_dict[c])
+        for c in range(1, ObstacleV2.num_classes()):
+            detail += '{:d}: {:s} AP = {:.4f}\n'.format(c, ObstacleV2.LABEL_TO_CATEGORY_DICT[c], class_to_ap_dict[c])
 
         return mean_ap, detail
 
     def _write_results(self, path_to_results_dir: str, image_ids: List[str], bboxes: List[List[float]], classes: List[int], probs: List[float]):
         class_to_txt_files_dict = {}
-        for c in range(1, Obstacle.num_classes()):
-            class_to_txt_files_dict[c] = open(os.path.join(path_to_results_dir, 'comp3_det_test_{:s}.txt'.format(Obstacle.LABEL_TO_CATEGORY_DICT[c])), 'w')
+        for c in range(1, ObstacleV2.num_classes()):
+            class_to_txt_files_dict[c] = open(os.path.join(path_to_results_dir, 'comp3_det_test_{:s}.txt'.format(ObstacleV2.LABEL_TO_CATEGORY_DICT[c])), 'w')
 
         for image_id, bbox, cls, prob in zip(image_ids, bboxes, classes, probs):
             class_to_txt_files_dict[cls].write('{:s} {:f} {:f} {:f} {:f} {:f}\n'.format(image_id, prob,
@@ -174,4 +170,4 @@ class Obstacle(Base):
 
     @staticmethod
     def num_classes() -> int:
-        return 17
+        return 16
