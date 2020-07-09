@@ -19,6 +19,9 @@ from logger import Logger as Log
 from model import Model
 from roi.pooler import Pooler
 
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 import visdom
 vis = visdom.Visdom()
 
