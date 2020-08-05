@@ -21,7 +21,8 @@ class Custom_ResNet101(backbone.base.Base):
         resnet101.load_state_dict(torch.load('/data_hdd/Jaewoo/pretrained_model/r101_duke_state_dict.pth'))
 
         children = list(resnet101.children())
-        children_split = list(children.children())
+        children_split = list(children[0].children())
+        
         features = children_split[:-1]
         num_features_out = 1024
 
