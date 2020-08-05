@@ -131,8 +131,9 @@ class Baseline(nn.Module):
         if pretrain_choice == 'imagenet':
             self.base.load_param(model_path)
             print('Loading pretrained ImageNet model......')
-        # elif pretrain_choice == 'custom':
-        #     self.base.load_param('/home/jwlee/Dropbox/3. projects/kaia_smart_cctv/pretrained_model/r101_duke_state_dict.pth')
+        elif pretrain_choice == 'custom':
+            self.base.load_param('/data_hdd/Jaewoo/pretrained_model/r101_duke_state_dict.pth')
+            print('Loding pretrained Custom model.........')
 
         self.gap = nn.AdaptiveAvgPool2d(1)
         # self.gap = nn.AdaptiveMaxPool2d(1)
