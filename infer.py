@@ -44,9 +44,9 @@ def _infer(path_to_input_image: str, path_to_output_image: str, path_to_checkpoi
             draw.rectangle(((bbox.left, bbox.top), (bbox.right, bbox.bottom)), outline=color)
             draw.rectangle(((bbox.left+1, bbox.top+1), (bbox.right+1, bbox.bottom+1)), outline=color)
             draw.rectangle(((bbox.left+2, bbox.top+2), (bbox.right+2, bbox.bottom+2)), outline=color)
-            draw.rectangle(((bbox.left+3, bbox.top+3), (bbox.right+3, bbox.bottom+3)), outline=color)
-            draw.rectangle(((bbox.left+4, bbox.top+4), (bbox.right+4, bbox.bottom+4)), outline=color)
-            draw.rectangle(((bbox.left+5, bbox.top+5), (bbox.right+5, bbox.bottom+5)), outline=color)
+            # draw.rectangle(((bbox.left+3, bbox.top+3), (bbox.right+3, bbox.bottom+3)), outline=color)
+            # draw.rectangle(((bbox.left+4, bbox.top+4), (bbox.right+4, bbox.bottom+4)), outline=color)
+            # draw.rectangle(((bbox.left+5, bbox.top+5), (bbox.right+5, bbox.bottom+5)), outline=color)
 
             draw.text((bbox.left, bbox.top), text=f'{category:s} {prob:.3f}', fill=color)
 

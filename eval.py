@@ -12,7 +12,6 @@ from logger import Logger as Log
 from model import Model
 from roi.pooler import Pooler
 
-
 def _eval(path_to_checkpoint: str, dataset_name: str, backbone_name: str, path_to_data_dir: str, path_to_results_dir: str):
     dataset = DatasetBase.from_name(dataset_name)(path_to_data_dir, DatasetBase.Mode.EVAL, Config.IMAGE_MIN_SIDE, Config.IMAGE_MAX_SIDE)
     evaluator = Evaluator(dataset, path_to_data_dir, path_to_results_dir)

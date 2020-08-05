@@ -5,7 +5,7 @@ from torch import nn
 
 class Base(object):
 
-    OPTIONS = ['resnet18', 'resnet50', 'resnet101']
+    OPTIONS = ['resnet18', 'resnet50', 'resnet101', 'custom_resnet101']
 
     @staticmethod
     def from_name(name: str) -> Type['Base']:
@@ -18,6 +18,9 @@ class Base(object):
         elif name == 'resnet101':
             from backbone.resnet101 import ResNet101
             return ResNet101
+        elif name == 'custom_resnet101':
+            from backbone.custom_resnet101 import Custom_ResNet101
+            return Custom_ResNet101
         else:
             raise ValueError
 
