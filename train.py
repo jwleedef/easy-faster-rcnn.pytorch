@@ -22,16 +22,16 @@ from roi.pooler import Pooler
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-import visdom
-vis = visdom.Visdom()
+# import visdom
+# vis = visdom.Visdom()
 
-def loss_tracker(loss_plot, loss_value, num):
-    '''num, loss_value, are Tensor'''
-    vis.line(X=num,
-             Y=loss_value,
-             win = loss_plot,
-             update='append'
-             )
+# def loss_tracker(loss_plot, loss_value, num):
+#     '''num, loss_value, are Tensor'''
+#     vis.line(X=num,
+#              Y=loss_value,
+#              win = loss_plot,
+#              update='append'
+#              )
 
 def _train(dataset_name: str, backbone_name: str, path_to_data_dir: str, path_to_checkpoints_dir: str, path_to_resuming_checkpoint: Optional[str]):
     dataset = DatasetBase.from_name(dataset_name)(path_to_data_dir, DatasetBase.Mode.TRAIN, Config.IMAGE_MIN_SIDE, Config.IMAGE_MAX_SIDE)
@@ -104,8 +104,8 @@ def _train(dataset_name: str, backbone_name: str, path_to_data_dir: str, path_to
             summary_writer.add_scalar('train/loss', loss.item(), step)
             step += 1
 
-            avg_loss = sum(losses) / len(losses)
-            loss_tracker(loss_plt, torch.Tensor([avg_loss]), torch.Tensor([step]))
+            # avg_loss = sum(losses) / len(losses)
+            # loss_tracker(loss_plt, torch.Tensor([avg_loss]), torch.Tensor([step]))
 
             if step == num_steps_to_finish:
                 should_stop = True
@@ -116,7 +116,7 @@ def _train(dataset_name: str, backbone_name: str, path_to_data_dir: str, path_to
                 steps_per_sec = num_steps_to_display / elapsed_time
                 samples_per_sec = batch_size * steps_per_sec
                 eta = (num_steps_to_finish - step) / steps_per_sec / 3600
-                # avg_loss = sum(losses) / len(losses)
+                avg_loss = sum(losses) / len(losses)
                 lr = scheduler.get_lr()[0]
                 Log.i(f'[Step {step}] Avg. Loss = {avg_loss:.6f}, Learning Rate = {lr:.8f} ({samples_per_sec:.2f} samples/sec; ETA {eta:.1f} hrs)')
 
