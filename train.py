@@ -39,7 +39,7 @@ def _train(dataset_name: str, backbone_name: str, path_to_data_dir: str, path_to
                             sampler=DatasetBase.NearestRatioRandomSampler(dataset.image_ratios, num_neighbors=Config.BATCH_SIZE),
                             num_workers=8, collate_fn=DatasetBase.padding_collate_fn, pin_memory=True)
 
-    loss_plt = vis.line(Y=torch.Tensor(1).zero_(),opts=dict(title='loss_tracker', legend=['loss'], showlegend=True))
+    # loss_plt = vis.line(Y=torch.Tensor(1).zero_(),opts=dict(title='loss_tracker', legend=['loss'], showlegend=True))
 
     Log.i('Found {:d} samples'.format(len(dataset)))
 
