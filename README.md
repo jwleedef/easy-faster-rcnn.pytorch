@@ -16,7 +16,7 @@ An easy implementation of [Faster R-CNN](https://arxiv.org/pdf/1506.01497.pdf) i
 
 ## Features
 
-* Supports PyTorch 1.0
+* Supports PyTorch 1.0 -> PyTorch 1.3
 * Supports `PASCAL VOC 2007` and `MS COCO 2017` datasets
 * Supports `ResNet-18`, `ResNet-50` and `ResNet-101` backbones (from official PyTorch model)
 * Supports `ROI Pooling` and `ROI Align` pooler modes
